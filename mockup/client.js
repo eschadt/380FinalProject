@@ -12,8 +12,43 @@ var roadMarkers = [];
 const sideBarArr = [];
 const arcArr = [];
 var lightArr = [];
+var buildingArr = [];
+var backgroundLights = [];
 
-//var scale = chroma.scale(['black','#111111','#222222','white','red']).domain([0,1],10);
+function addRoadLights(x, y , z, color, intensity){
+
+      //var intensity = 3.5;
+      var distance = 500;
+      var decay = 1.0;
+
+      var sphere = new THREE.SphereGeometry( 15, 30, 30 );
+      var light = new THREE.PointLight( color, intensity, distance, decay );
+      light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color } ) ) );
+      light.position.set(x, y, z);
+
+      scene.add( light );
+
+      return light;
+
+}
+
+function backgroundLight(){
+
+    var spotLight = new THREE.SpotLight( 0xffffff, 1 );
+    spotLight.position.set( 200, 4000, -1000 );
+
+    spotLight.castShadow = true;
+
+    spotLight.shadow.mapSize.width = 4096;
+    spotLight.shadow.mapSize.height = 4096;
+
+    spotLight.shadow.camera.near = 4000;
+    spotLight.shadow.camera.far = 4000;
+    spotLight.shadow.camera.fov = 100;
+
+    scene.add( spotLight );
+
+}
 
 function init() {
   scene = new THREE.Scene();
@@ -29,78 +64,57 @@ function init() {
   camera.position.set(0, 100, 900); // x, y (move up), back out on the z-axis
   scene.add(camera); // add camera to scene
 
+  var c1 = 0xff0040, c2 = 0x0040ff, c3 = 0x80ff80, c4 = 0xffaa00, c5 = 0x00ffaa, c6 = 0xff1100;
+  var c7 = 0xFF5733, c8 = 0x7DFF33, c9 = 0x33C1FF, c10= 0xE933FF;
 
-                var intensity = 3.5;
-  				var distance = 500;
-  				var decay = 1.0;
-  				var c1 = 0xff0040, c2 = 0x0040ff, c3 = 0x80ff80, c4 = 0xffaa00, c5 = 0x00ffaa, c6 = 0xff1100;
-                var c7 = 0xFF5733, c8 = 0x7DFF33, c9 = 0x33C1FF, c10= 0xE933FF;
-  				var sphere = new THREE.SphereGeometry( 30, 30, 30 );
-  				light1 = new THREE.PointLight( c1, intensity, distance, decay );
-  				light1.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c1 } ) ) );
-                light1.position.set(-275, 200, 700);
-                lightArr.push(light1);
-  				scene.add( light1 );
-  				light2 = new THREE.PointLight( c2, intensity, distance, decay );
-  				light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c2 } ) ) );
-                light2.position.set(335, 200, 700);
-  				scene.add( light2 );
-                lightArr.push(light2);
-  				light3 = new THREE.PointLight( c3, intensity, distance, decay );
-  				light3.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c3 } ) ) );
-                light3.position.set(-275, 200, 300);
-  				scene.add( light3 );
-                lightArr.push(light3);
-  				light4 = new THREE.PointLight( c4, intensity, distance, decay );
-  				light4.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c4 } ) ) );
-                light4.position.set(335, 200, 300);
-  				scene.add( light4 );
-                lightArr.push(light4);
-  				light5 = new THREE.PointLight( c5, intensity, distance, decay );
-  				light5.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c5 } ) ) );
-                light5.position.set(-275, 200, -100);
-  				scene.add( light5 );
-                lightArr.push(light5);
-  				light6 = new THREE.PointLight( c6, intensity, distance, decay );
-  				light6.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c6 } ) ) );
-                light6.position.set(335, 200, -100);
-  				scene.add( light6 );
-                lightArr.push(light6);
-                light7 = new THREE.PointLight( c7, intensity, distance, decay );
-                light7.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c7 } ) ) );
-                light7.position.set(-275, 200, -500);
-                scene.add( light7 );
-                lightArr.push(light7);
-                light8 = new THREE.PointLight( c8, intensity, distance, decay );
-                light8.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c8 } ) ) );
-                light8.position.set(335, 200, -500);
-                scene.add( light8 );
-                lightArr.push(light8);
-                light9 = new THREE.PointLight( c9, intensity, distance, decay );
-                light9.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c9 } ) ) );
-               light9.position.set(-275, 200, -900);
-                scene.add( light9 );
-                lightArr.push(light9);
-                light10 = new THREE.PointLight( c10, intensity, distance, decay );
-                light10.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c10 } ) ) );
-                light10.position.set(335, 200, -900);
-                scene.add( light10 );
-                lightArr.push(light10);
-  				var dlight = new THREE.DirectionalLight( 0xffffff, 0.05 );
-  				dlight.position.set( 0.5, 1, 0 ).normalize();
-  				scene.add( dlight );
+                lightArr.push(addRoadLights(-275, 200, 700, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(335, 200, 700, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(-275, 200, 300, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(335, 200, 300, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(-275, 200, -100, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(335, 200, -100, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(-275, 200, -500, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(335, 200, -500, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(-275, 200, -900, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(335, 200, -900, 0xff0040, 3.5));
+
+                backgroundLight();
+
+
+                backgroundLights.push({light: addRoadLights(-800, 1000, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(-200, 1100, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(400, 1280, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1200, 1600, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1700, 1350, -1750, 0xffffff, 3.5), speed: 60});
+
+                backgroundLights.push({light: addRoadLights(-1000, 1900, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(0, 1400, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(600, 1500, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1200, 2100, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1800, 1809, -1750, 0xffffff, 3.5), speed: 60});
+
+                backgroundLights.push({light: addRoadLights(-1200, 2500, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1500, 2200, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(-700, 1800, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(987, 1000, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1950, 850, -1750, 0xffffff, 3.5), speed: 60});
 
 
 
 
-  //scene.fog = new THREE.Fog(0x00FF7F, 5, 3800);
+
+
+
+
+                scene.fog = new THREE.Fog(0x000000, -800, 4000)
+                //scene.fog = new THREE.FogExp2(0x00FF7F, .001);
 
 
 
 
 
     geometry = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block1 = new THREE.Mesh(geometry, material);
     scene.add(block1);
     block1.position.set(-275, 50, 700);
@@ -108,7 +122,7 @@ function init() {
     sideBarArr.push(block1);
 
     var geometry2 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block2 = new THREE.Mesh(geometry2, material);
     scene.add(block2);
     block2.position.set(-275, 50, 300);
@@ -116,7 +130,7 @@ function init() {
     sideBarArr.push(block2);
 
     var geometry3 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block3 = new THREE.Mesh(geometry3, material);
     scene.add(block3);
     block3.position.set(-275, 50, -100);
@@ -259,24 +273,18 @@ function init() {
     curveObject5.position.z = 0;
     arcArr.push(curveObject5);
 
-    geometry = new THREE.PlaneGeometry( 850, 1800, 32 );
-    material = new THREE.MeshBasicMaterial( {color: 0x555555, side: THREE.DoubleSide} );
+    geometry = new THREE.PlaneGeometry( 2000, 1800, 32 );
+    material = new THREE.MeshStandardMaterial( {color: 0x00000, side: THREE.DoubleSide} );
     var road = new THREE.Mesh( geometry, material );
     road.rotation.x = (Math.PI / 180) * 90;
     road.position.set(-20, 0, 0);
     scene.add( road );
 
-    geometry = new THREE.PlaneGeometry( 850, 1800, 32 );
-    material = new THREE.MeshBasicMaterial( {color: 0x555555, side: THREE.DoubleSide} );
-    var background = new THREE.Mesh( geometry, material );
-    road.rotation.x = (Math.PI / 180) * 90;
-    road.position.set(-20, 0, 0);
-    scene.add( road );
 
 
 
   var floorGeometry = new THREE.PlaneGeometry(2000, 2000, 10, 10); // x, y, vertices
-  var floorMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: true});
+  var floorMaterial = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
   var floor = new THREE.Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = Math.PI / 2; // rotate to lay flat
   scene.add(floor);
@@ -284,7 +292,7 @@ function init() {
   for (let k = 0; k < 19; k++) {
 
       geometry = new THREE.PlaneGeometry( 25, 50, 32 );
-      material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+      material = new THREE.MeshStandardMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
       var marker = new THREE.Mesh( geometry, material );
       marker.rotation.x = (Math.PI / 180) * 90;
       marker.position.set(0, 0, -900 + k * 100)
@@ -294,7 +302,7 @@ function init() {
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  createCity(10, 800, 100, 3);
+  createCity(14, 800, 100, 3);
 
   setUpColor();
 
@@ -306,7 +314,7 @@ function init() {
    geometry = new THREE.PlaneGeometry( 5000, 3000, 32 );
    var background = new THREE.Mesh( geometry, material );
    //background.rotation.y = (Math.PI / 180) * 180;
-   background.position.set(180, 1350, -2000);
+   background.position.set(180, 1350, -1800);
    scene.add( background );
 
  });
@@ -354,13 +362,8 @@ function animate() {
 
 
 	requestAnimationFrame(animate);
-}
 
-function an2(){
-    requestAnimationFrame(an2);
 
-    renderer.render(scene, camera);
-    controls.update();
     for (let k = 0; k < roadMarkers.length; k++) {
         roadMarkers[k].position.z += 10;
 
@@ -368,15 +371,6 @@ function an2(){
             roadMarkers[k].position.set(0, 0, -900);
         }
     }
-
-}
-
-
-function an3() {
-
-    requestAnimationFrame(an3);
-    renderer.render(scene, camera);
-    controls.update();
 
     for (let k = 0; k < lightArr.length; k++) {
         lightArr[k].position.z += 20.75;
@@ -392,7 +386,32 @@ function an3() {
 
     }
 
+    var startingZ = 700;
+    var resetZ = startingZ  -  (((buildingArr.length/2) - 1) * spaceforEachBuilding);
+
+    for (let k = 0; k < buildingArr.length; k++) {
+        buildingArr[k].position.z += 20.75;
+
+        if (buildingArr[k].position.z > 1010) {
+
+                buildingArr[k].position.z = resetZ;
+
+        }
+
+    }
+
+    resetX = -1500;
+
+    for (let k = 0; k < backgroundLights.length; k++) {
+        if (backgroundLights[k].light.position.x > 2000) {
+            backgroundLights[k].light.position.x = resetX;
+        }
+
+        backgroundLights[k].light.position.x += backgroundLights[k].speed;
+    }
+
 }
+
 
 function generateBuildingTexture() {
     var canvas = document.createElement("canvas");
@@ -420,6 +439,8 @@ function generateBuildingTexture() {
     }
     return canvas;
 }
+
+var spaceforEachBuilding = 335;
 
 function createCity(buildingCount, rangeX, rangeY, scale) {
 
@@ -461,10 +482,12 @@ function createCity(buildingCount, rangeX, rangeY, scale) {
         // add to scene
 
         scene.add(building);
+        buildingArr.push(building);
 
-        startingZ -= 335;
 
-        if (i === 4){
+        startingZ -= spaceforEachBuilding;
+
+        if (i === (buildingCount/2) - 1){
             startingZ = 700;
             startingX = 550;
         }
@@ -505,15 +528,6 @@ function setUpColor() {
 
 }
 
-function animate2(){
-    renderer.render(scene, camera);
-    controls.update();
-
-    requestAnimationFrame(animate2);
-}
 
 init();
-animate();
-an2();
-an3();
-//animate2();
+animate(); //animate the light rings above the road animate road markers, animate the lights on the road, building movement, city lights
