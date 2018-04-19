@@ -1,25 +1,33 @@
 var camera, scene, renderer, controls;
 var geometry, material, mesh;
 
+
+
 var block1, block2, block3, block4, block5;
 var block11, block22, block33, block44, block55;
-var curveObject1, curveObject2, curveObject3, curveObject4, curveObject5;
+
+var container = document.getElementById('container');
+
 
 var light1, light2, light3, light4, light5, light6, light7, light8, light9, light10;
 
 var roadMarkers = [];
-
 const sideBarArr = [];
 const arcArr = [];
 var lightArr = [];
 var buildingArr = [];
 var backgroundLights = [];
+var roadLightsForRings = [];
 
+var mirrorSphere, mirrorSphereCamera; // for mirror material
+
+
+//add the lights lining the road
 function addRoadLights(x, y , z, color, intensity){
 
       //var intensity = 3.5;
       var distance = 500;
-      var decay = 1.0;
+      var decay = 1.2;
 
       var sphere = new THREE.SphereGeometry( 15, 30, 30 );
       var light = new THREE.PointLight( color, intensity, distance, decay );
@@ -32,6 +40,7 @@ function addRoadLights(x, y , z, color, intensity){
 
 }
 
+//add a spot light on background city scape
 function backgroundLight(){
 
     var spotLight = new THREE.SpotLight( 0xffffff, 1 );
@@ -50,6 +59,35 @@ function backgroundLight(){
 
 }
 
+//add light rings to the road
+function addLightRings(x, y, z) {
+
+    var TorusGeometry = new THREE.TorusGeometry( 350, 11, 16, 100 );
+    var material = new THREE.MeshStandardMaterial( { color: 0x7B68EE } );
+    var torusObject = new THREE.Mesh( TorusGeometry, material );
+    scene.add( torusObject );
+    torusObject.position.set(x,  y, z);
+    arcArr.push(torusObject);
+}
+
+function addRoadLightsForRings(x, y , z, color, intensity){
+
+      //var intensity = 3.5;
+      var distance = 500;
+      var decay = 1.0;
+
+      var sphere = new THREE.SphereGeometry( .01, 30, 30 );
+      var light = new THREE.PointLight( color, intensity, distance, decay );
+      light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color } ) ) );
+      light.position.set(x, y, z);
+
+      scene.add( light );
+
+      return light;
+
+}
+
+
 function init() {
   scene = new THREE.Scene();
   var width = window.innerWidth;
@@ -58,46 +96,59 @@ function init() {
   renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true});
   renderer.setSize(width, height);
 
+  container = document.getElementById( 'container' );
+  container.appendChild( renderer.domElement );
+
 
 
   camera = new THREE.PerspectiveCamera(100, width/height, 0.1, 25000); // FOV, aspect ration, near, far
-  camera.position.set(0, 100, 900); // x, y (move up), back out on the z-axis
+  camera.position.set(15, 150, 960); // x, y (move up), back out on the z-axis
   scene.add(camera); // add camera to scene
 
-  var c1 = 0xff0040, c2 = 0x0040ff, c3 = 0x80ff80, c4 = 0xffaa00, c5 = 0x00ffaa, c6 = 0xff1100;
-  var c7 = 0xFF5733, c8 = 0x7DFF33, c9 = 0x33C1FF, c10= 0xE933FF;
 
-                lightArr.push(addRoadLights(-275, 200, 700, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(335, 200, 700, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(-275, 200, 300, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(335, 200, 300, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(-275, 200, -100, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(335, 200, -100, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(-275, 200, -500, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(335, 200, -500, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(-275, 200, -900, 0xff0040, 3.5));
-                lightArr.push(addRoadLights(335, 200, -900, 0xff0040, 3.5));
+                lightArr.push(addRoadLights(-275, 200, 700, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(335, 200, 700, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-275, 200, 300, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(335, 200, 300, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-275, 200, -100, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(335, 200, -100, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-275, 200, -500, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(335, 200, -500, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-275, 200, -900, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(335, 200, -900, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-275, 200, -1300, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(335, 200, -1300, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-275, 200, -1700, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(335, 200, -1700, 0xff0040, 2.5));
 
+                //add lights in the middle of the road
+                for (let k = 0; k < 9; k++) {
+                    roadLightsForRings.push(addRoadLightsForRings(15, 200, 700 - k*300, 0x87CEFA, 3.2));
+                }
+
+                //add spotlight on the city scape
                 backgroundLight();
 
+                //add stars
+                //add lights that will run on top of city scape, giving the illusion there are spaceships
+                //or stars flying in the landscape.
+                backgroundLights.push({light: addRoadLights(-800, 1000, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(-200, 1100, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(400, 1280, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1200, 1600, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1700, 1350, -1900, 0xffffff, 3.5), speed: 60});
 
-                backgroundLights.push({light: addRoadLights(-800, 1000, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(-200, 1100, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(400, 1280, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1200, 1600, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1700, 1350, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(-1000, 1900, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(0, 1400, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(600, 1500, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1200, 2100, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1800, 1809, -1900, 0xffffff, 3.5), speed: 60});
 
-                backgroundLights.push({light: addRoadLights(-1000, 1900, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(0, 1400, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(600, 1500, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1200, 2100, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1800, 1809, -1750, 0xffffff, 3.5), speed: 60});
-
-                backgroundLights.push({light: addRoadLights(-1200, 2500, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1500, 2200, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(-700, 1800, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(987, 1000, -1750, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1950, 850, -1750, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(-1200, 2500, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1500, 2200, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(-700, 1800, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(987, 1000, -1900, 0xffffff, 3.5), speed: 60});
+                backgroundLights.push({light: addRoadLights(1950, 850, -1900, 0xffffff, 3.5), speed: 60});
 
 
 
@@ -108,8 +159,6 @@ function init() {
 
                 scene.fog = new THREE.Fog(0x000000, -800, 4000)
                 //scene.fog = new THREE.FogExp2(0x00FF7F, .001);
-
-
 
 
 
@@ -138,7 +187,7 @@ function init() {
     sideBarArr.push(block3);
 
     var geometry4 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0x00ffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block4 = new THREE.Mesh(geometry4, material);
     scene.add(block4);
     block4.position.set(-275, 50, -500);
@@ -146,7 +195,7 @@ function init() {
     sideBarArr.push(block4);
 
     var geometry9 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0x00ffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block5 = new THREE.Mesh(geometry9, material);
     scene.add(block5);
     block5.position.set(-275, 50, -900);
@@ -154,7 +203,7 @@ function init() {
     sideBarArr.push(block5);
 
     var geometry5 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block11 = new THREE.Mesh(geometry5, material);
     scene.add(block11);
     block11.position.set(335, 50, 700);
@@ -162,7 +211,7 @@ function init() {
     sideBarArr.push(block11);
 
     var geometry6 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block22 = new THREE.Mesh(geometry6, material);
     scene.add(block22);
     block22.position.set(335, 50, 300);
@@ -170,7 +219,7 @@ function init() {
     sideBarArr.push(block22);
 
     var geometry7 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block33 = new THREE.Mesh(geometry7, material);
     scene.add(block33);
     block33.position.set(335, 50, -100);
@@ -178,7 +227,7 @@ function init() {
     sideBarArr.push(block33);
 
     var geometry8 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0x00ffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block44 = new THREE.Mesh(geometry8, material);
     scene.add(block44);
     block44.position.set(335, 50, -500);
@@ -186,100 +235,37 @@ function init() {
     sideBarArr.push(block44);
 
     var geometry10 = new THREE.BoxGeometry( 400, 25, 50 );
-    material = new THREE.MeshStandardMaterial({color: 0x00ffff, wireframe: false});
+    material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block55 = new THREE.Mesh(geometry10, material);
     scene.add(block55);
     block55.position.set(335, 50, -900);
     block55.rotation.y = (Math.PI / 180) * 90;
     sideBarArr.push(block55);
 
-    var curve1 = new THREE.QuadraticBezierCurve3(
-    	new THREE.Vector3( -330, 0, 700 ),
-    	new THREE.Vector3( 25, 500, 700),
-    	new THREE.Vector3( 365, 0, 700 )
-    );
-    var points = curve1.getPoints( 200 );
-    var geometryCurve1 = new THREE.BufferGeometry().setFromPoints( points );
-    material = new THREE.LineBasicMaterial( {
-        color: 0xffffff,
-        linewidth: 10
-    } );
-    curveObject1 = new THREE.Line( geometryCurve1, material );
-    scene.add(curveObject1);
-    curveObject1.position.z = 0;
-    arcArr.push(curveObject1);
+    //add light addLightRings
+    for (let k = 0; k < 9; k++) {
+        addLightRings(20, -100, 700 - k * 300);
+    }
+    //stationary ring at end, giving illusion rings have more depth
+    var TorusGeometry = new THREE.TorusGeometry( 320, 11, 16, 80 );
+    var material = new THREE.MeshStandardMaterial( { color: 0x7B68EE } );
+    var torusObject = new THREE.Mesh( TorusGeometry, material );
+    scene.add( torusObject );
+    torusObject.position.set(20, -100, -1650);
+    //arcArr.push(torusObject);
 
-    var curve2 = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3( -330, 0, 300 ),
-        new THREE.Vector3( 25, 500, 300),
-        new THREE.Vector3( 365, 0, 300 )
-    );
-    var points2 = curve2.getPoints( 200 );
-    var geometryCurve2 = new THREE.BufferGeometry().setFromPoints( points2 );
-    material = new THREE.LineBasicMaterial( {
-        color: 0xffffff,
-        linewidth: 10
-    } );
-    curveObject2 = new THREE.Line( geometryCurve2, material );
-    scene.add(curveObject2);
-    curveObject2.position.z = 0;
-    arcArr.push(curveObject2);
 
-    var curve3 = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3( -330, 0, -100 ),
-        new THREE.Vector3( 25, 500, -100),
-        new THREE.Vector3( 365, 0, -100 )
-    );
-    var points3 = curve3.getPoints( 200 );
-    var geometryCurve3 = new THREE.BufferGeometry().setFromPoints( points3 );
-    material = new THREE.LineBasicMaterial( {
-        color: 0xffffff,
-        linewidth: 10
-    } );
-    curveObject3 = new THREE.Line( geometryCurve3, material );
-    scene.add(curveObject3);
-    curveObject3.position.z = 0;
-    arcArr.push(curveObject3);
+    //add aditional ring that stays stationary so it makes it looks like rings go down further then they do
+    //
 
-    var curve4 = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3( -330, 0, -500 ),
-        new THREE.Vector3( 25.5, 500, -500),
-        new THREE.Vector3( 365, 0, -500 )
-    );
-    var points4 = curve4.getPoints( 200 );
-    var geometryCurve4 = new THREE.BufferGeometry().setFromPoints( points4 );
-    material = new THREE.LineBasicMaterial( {
-        color: 0xffffff,
-        linewidth: 10
-    } );
-    curveObject4 = new THREE.Line( geometryCurve4, material );
-    scene.add(curveObject4);
-    curveObject4.position.z = 0;
-    arcArr.push(curveObject4);
 
-    var curve5 = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3( -330, 0, -900 ),
-        new THREE.Vector3( 25.5, 500, -900),
-        new THREE.Vector3( 365, 0, -900 )
-    );
-    var points5 = curve5.getPoints( 200 );
-    var geometryCurve5 = new THREE.BufferGeometry().setFromPoints( points5 );
-    material = new THREE.LineBasicMaterial( {
-        color: 0xffffff,
-        linewidth: 10
-    } );
-    curveObject5 = new THREE.Line( geometryCurve5, material );
-    scene.add(curveObject5);
-    curveObject5.position.z = 0;
-    arcArr.push(curveObject5);
-
-    geometry = new THREE.PlaneGeometry( 2000, 1800, 32 );
+    //add the road
+    geometry = new THREE.PlaneGeometry( 2000, 3000, 32 );
     material = new THREE.MeshStandardMaterial( {color: 0x00000, side: THREE.DoubleSide} );
     var road = new THREE.Mesh( geometry, material );
+    road.position.set(-20, 0, -300);
     road.rotation.x = (Math.PI / 180) * 90;
-    road.position.set(-20, 0, 0);
     scene.add( road );
-
 
 
 
@@ -289,22 +275,20 @@ function init() {
   floor.rotation.x = Math.PI / 2; // rotate to lay flat
   scene.add(floor);
 
-  for (let k = 0; k < 19; k++) {
+  for (let k = 0; k < 25; k++) {
 
-      geometry = new THREE.PlaneGeometry( 25, 50, 32 );
-      material = new THREE.MeshStandardMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+      geometry = new THREE.PlaneGeometry( 15, 50, 32 );
+      material = new THREE.MeshStandardMaterial( {color: 0xfffff0 , side: THREE.DoubleSide} );
       var marker = new THREE.Mesh( geometry, material );
       marker.rotation.x = (Math.PI / 180) * 90;
-      marker.position.set(0, 0, -900 + k * 100)
+      marker.position.set(15, 3, -1500 + k * 100)
       roadMarkers.push(marker);
       scene.add(roadMarkers[k])
   }
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  createCity(14, 800, 100, 3);
-
-  setUpColor();
+  createCity(16, 800, 100, 3);
 
   var textureLoader = new THREE.TextureLoader();
 
@@ -314,23 +298,37 @@ function init() {
    geometry = new THREE.PlaneGeometry( 5000, 3000, 32 );
    var background = new THREE.Mesh( geometry, material );
    //background.rotation.y = (Math.PI / 180) * 180;
-   background.position.set(180, 1350, -1800);
+   background.position.set(180, 1350, -2200);
    scene.add( background );
 
  });
 
 
+//add reflective spehre
+//idea taken from inclass example and http://stemkoski.github.io/Three.js/Reflection.html
+ var sphereGeom =  new THREE.SphereGeometry( 50, 32, 16 ); // radius, segmentsWidth, segmentsHeight
+ mirrorSphereCamera = new THREE.CubeCamera( 0.1, 500, 512 );
+ // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
+ scene.add( mirrorSphereCamera );
+ var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
+ mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
+ mirrorSphere.position.set(15,50,600);
+ mirrorSphereCamera.position = mirrorSphere.position;
+ scene.add(mirrorSphere);
 
-  document.body.appendChild(renderer.domElement);
-  renderer.render(scene, camera);
+
+  //document.body.appendChild(renderer.domElement);
+  //container.appendChild(renderer.domElement);
+  //renderer.render(scene, camera);
 }
+
 
 //get ms since 1970.
 //
 var start = new Date().getTime();
 var current;
 var delta;
-var delay = 300;
+var delay = 45;
 var iteration = 0;
 
 var colors = ["0xffffff", "0xffffff", "0xffffff", "0xffffff", "0x00ffff"];
@@ -338,63 +336,77 @@ var colors = ["0xffffff", "0xffffff", "0xffffff", "0xffffff", "0x00ffff"];
 
 function animate() {
 
+    var startingZ = 700;
+
+
 	current = new Date().getTime();
 	delta = current - start;
-
 
 	if (delta >= delay) {
 
 		start = new Date().getTime();
 		iteration++;
 
-
-  		renderer.render(scene, camera);
- 	 	controls.update();
-
-        for (let k = 0; k < arcArr.length; k++) {
-            arcArr[k].material.color.setHex( colors[(iteration + k) % 5]);
-        }
+        mirrorSphere.visible = false;
+        mirrorSphereCamera.updateCubeMap( renderer, scene );
+        mirrorSphere.visible = true;
 
 	}
 
+
 	renderer.render(scene, camera);
  	controls.update();
-
-
 	requestAnimationFrame(animate);
+
+
+
+
+    var resetLightRingZ = (arcArr.length - 3) * -300;
+    for (let k = 0; k < arcArr.length; k++) {
+        arcArr[k].position.z += 20;
+
+        if (arcArr[k].position.z > 1060) {
+
+                arcArr[k].position.z = resetLightRingZ;
+
+        }
+
+    }
 
 
     for (let k = 0; k < roadMarkers.length; k++) {
         roadMarkers[k].position.z += 10;
 
         if (roadMarkers[k].position.z > 1010) {
-            roadMarkers[k].position.set(0, 0, -900);
+            roadMarkers[k].position.z = -1500;
         }
     }
 
     for (let k = 0; k < lightArr.length; k++) {
-        lightArr[k].position.z += 20.75;
+        lightArr[k].position.z += 20;
 
-        if (lightArr[k].position.z > 1010) {
-            if (k % 2) { //left side
-                lightArr[k].position.set(-275, 200, -900);
-            }
-            else { //right side
-                lightArr[k].position.set(335, 200, -900);
-            }
+        if (lightArr[k].position.z > 1060) {
+                lightArr[k].position.z =  -1700;
         }
 
     }
 
-    var startingZ = 700;
-    var resetZ = startingZ  -  (((buildingArr.length/2) - 1) * spaceforEachBuilding);
+    for (let k = 0; k < roadLightsForRings.length; k++) {
+        roadLightsForRings[k].position.z += 20;
+
+        if (roadLightsForRings[k].position.z > 1060) {
+                roadLightsForRings[k].position.z =  resetLightRingZ;
+        }
+    }
+
+    var resetBuildingZ = startingZ  -  (((buildingArr.length/2) - 1) * spaceforEachBuilding);
 
     for (let k = 0; k < buildingArr.length; k++) {
-        buildingArr[k].position.z += 20.75;
+        buildingArr[k].position.z += 20;
 
-        if (buildingArr[k].position.z > 1010) {
+        if (buildingArr[k].position.z > 1020) {
 
-                buildingArr[k].position.z = resetZ;
+                buildingArr[k].position.z = resetBuildingZ;
 
         }
 
@@ -442,6 +454,9 @@ function generateBuildingTexture() {
 
 var spaceforEachBuilding = 335;
 
+//most of code for building generation taken and modified from
+//https://github.com/josdirksen/essential-threejs/blob/master/chapter-05/05.04-Simple-3D-Buildings.html
+//
 function createCity(buildingCount, rangeX, rangeY, scale) {
 
     var startingX = -500;
@@ -502,31 +517,6 @@ function random_rgba() {
     return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
 }
 
-function setUpColor() {
-
-
-    block1.material.color.setHex( colors[0] );
-    block2.material.color.setHex( colors[1] );
-    block3.material.color.setHex( colors[2] );
-    block4.material.color.setHex( colors[3] );
-    block5.material.color.setHex( colors[4] );
-
-    block11.material.color.setHex( colors[0] );
-    block22.material.color.setHex( colors[1] );
-    block33.material.color.setHex( colors[2] );
-    block44.material.color.setHex( colors[3] );
-    block55.material.color.setHex( colors[4] );
-
-    //curveObject1.material.color.setHex( colors[iteration % 5] );
-    curveObject1.material.color.setHex( colors[0] );
-    curveObject2.material.color.setHex( colors[1] );
-    curveObject3.material.color.setHex( colors[2] );
-    curveObject4.material.color.setHex( colors[3] );
-    curveObject5.material.color.setHex( colors[3] );
-
-    console.log(curveObject5);
-
-}
 
 
 init();
