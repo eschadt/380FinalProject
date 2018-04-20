@@ -96,10 +96,6 @@ function init() {
   renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true});
   renderer.setSize(width, height);
 
-  container = document.getElementById( 'container' );
-  container.appendChild( renderer.domElement );
-
-
 
   camera = new THREE.PerspectiveCamera(100, width/height, 0.1, 25000); // FOV, aspect ration, near, far
   camera.position.set(15, 150, 960); // x, y (move up), back out on the z-axis
@@ -317,9 +313,11 @@ function init() {
  scene.add(mirrorSphere);
 
 
-  //document.body.appendChild(renderer.domElement);
-  //container.appendChild(renderer.domElement);
-  //renderer.render(scene, camera);
+
+ document.body.appendChild(renderer.domElement);
+  renderer.render(scene, camera);
+
+
 }
 
 
