@@ -12,7 +12,12 @@ var planetImgPaths = ["earth", "jupiter", "mars", "mercury", "moon", "neptune"
 //relative (kind of) sizes of the planets, as compared to earth which has base size of 500
 var sizes = [550, 1000, 400, 300, 350, 700, 250, 1000, 1000, 600, 480];
 
-var planetOnScene;
+var planetsOnScene = [];
+
+var highwayMarkersL = [];
+var numberOfMarkersL = 7;
+var highwayMarkersR = [];
+var numberOfMarkersR = 7;
 
 function init() {
   scene = new THREE.Scene();
@@ -44,6 +49,19 @@ function init() {
   addStars();
   addSpaceHighway();
 
+  //add markers to space highway
+  for (let k = 0; k < numberOfMarkersL; k++) {
+      highwayMarkersL.push( addMarkersToHighway(-245) );
+      scene.add(highwayMarkersL[k]);
+      highwayMarkersR.push( addMarkersToHighway(245) );
+      scene.add(highwayMarkersR[k]);
+  }
+
+  //space out markers
+  spreadOutHighwayMarkers();
+  addAnchorMarkers();
+
+
   //add planets
   for (let k = 0; k < planetImgPaths.length; k++) {
       createPlanet(planetImgPaths[k], planetImgPaths[k] + "bump", sizes[k]);
@@ -56,42 +74,19 @@ function init() {
 //because all the image loading is done sync, finish setup here
 function finishInit() {
 
-    addPlanetToScene();
+    planetsOnScene.push( addPlanetToScene() );
+    scene.add(planetsOnScene[0]);
 
     animate();
 }
 
-//
-//code to add a random planet to the scene
-//
-
-function getRandomPlanet() {
-    let index = Math.floor(Math.random() * 11);
-    return planets[index];
-}
-
-function addPlanetToScene() {
-    //place a planet on the scene
-    planetOnScene = getRandomPlanet();
-    planetOnScene.scale.z = .01;
-    planetOnScene.scale.x = .01;
-    planetOnScene.scale.y = .01;
-    let ycord = Math.random() * 350 + 300;
-    let xCord = Math.floor(Math.random() * 2) ? 1200 : -1200; //500 or -500
-    console.log(planetOnScene.width);
-    planetOnScene.position.set(xCord, ycord, -18600);
-    scene.add(planetOnScene);
-
-}
-
-function addLighting(intensity) {
-    var light = new THREE.AmbientLight( 0xf0f0f0, intensity ); // soft white light
-    scene.add( light );
-}
+//                          //
+//      Generate Highway    //
+//                          //
 
 //add highway lines on view .. x cords: 500 and -500
 function addSpaceHighway() {
-        var BoxGeometry = new THREE.BoxGeometry(15, 15, 4000);
+        var BoxGeometry = new THREE.BoxGeometry(15, 15, 4300);
         var boxMaterial = new THREE.MeshBasicMaterial({color: 0xfff000, wireframe: true});
         var box = new THREE.Mesh(BoxGeometry, boxMaterial);
         box.position.set(-500, 50, -750);
@@ -99,7 +94,7 @@ function addSpaceHighway() {
         scene.add(box);
         highwayLines.push(box);
 
-        BoxGeometry = new THREE.BoxGeometry(15, 15, 4000);
+        BoxGeometry = new THREE.BoxGeometry(15, 15, 4300);
         boxMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
         var box2 = new THREE.Mesh(BoxGeometry, boxMaterial);
         box2.position.set(500, 50, -750);
@@ -107,10 +102,98 @@ function addSpaceHighway() {
         scene.add(box2);
         highwayLines.push(box2);
 
+
 }
 
-function addLightsToHighway() {
+//adds red markers on highway lines, to add movment effect, and to give
+//cool guidance effect.
+function addMarkersToHighway(xPos) {
 
+    let rotation;
+
+    if (xPos < 0) {
+        rotation = Math.PI / 180 * -7;
+    }
+    else {
+        rotation = Math.PI / 180 * 7;
+    }
+    var BoxGeometry = new THREE.BoxGeometry(20, 20, 25);
+    var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: false});
+    var box = new THREE.Mesh(BoxGeometry, boxMaterial);
+    box.position.set(xPos, 50, -2600);
+    box.rotation.y = rotation;
+    return box;
+}
+
+function addAnchorMarkers() {
+    var BoxGeometry = new THREE.BoxGeometry(20, 20, 100);
+    var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: false});
+    var box = new THREE.Mesh(BoxGeometry, boxMaterial);
+    box.position.set(-220, 50, -2815);
+    box.rotation.y = Math.PI / 180 * -7;
+    scene.add(box);
+
+    BoxGeometry = new THREE.BoxGeometry(20, 20, 100);
+    boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: false});
+    box = new THREE.Mesh(BoxGeometry, boxMaterial);
+    box.position.set(220, 50, -2815);
+    box.rotation.y = Math.PI / 180 * 7;
+    scene.add(box);
+}
+
+function spreadOutHighwayMarkers() {
+
+    let initialZLeft = -225;
+    let initialZRight = 225;
+    let distanceBetweenMarkers = 600;
+    for (let k = 0; k < numberOfMarkersL; k++) {
+        highwayMarkersL[k].translateZ(k * distanceBetweenMarkers);
+        highwayMarkersR[k].translateZ(k * distanceBetweenMarkers);
+    }
+}
+
+
+//
+//code to add a random planet to the scene
+//
+
+var lastIndex = -1;
+
+//MAKE A DEEP COPY ARGHH, add condition so dont spawn same planet back to back.
+function getRandomPlanet() {
+    let index = Math.floor(Math.random() * 11);
+
+    //to avoid adding two duplicate planets back to back.
+    if (lastIndex != -1) { //dont want to check first planet added
+        while (lastIndex === index) {
+            index = Math.floor(Math.random() * 11);
+        }
+
+        //update the last index
+        lastIndex = index;
+    }
+
+    return planets[index].clone();
+}
+
+function addPlanetToScene() {
+    //place a planet on the scene
+    var planetOnScene = getRandomPlanet();
+
+    planetOnScene.scale.z = .01;
+    planetOnScene.scale.x = .01;
+    planetOnScene.scale.y = .01;
+    let ycord = Math.random() * 350 + 300;
+    let xCord = Math.floor(Math.random() * 2) ? 1200 : -1200; //500 or -500
+    planetOnScene.position.set(xCord, ycord, -18600);
+
+    return planetOnScene;
+
+}
+
+function addLighting(intensity) {
+    var light = new THREE.AmbientLight( 0xf0f0f0, intensity ); // soft white light
+    scene.add( light );
 }
 
 //modularize this.. todo
@@ -174,6 +257,29 @@ function addStars(){
 //                          //
 //                          //
 
+//to move markers along highway
+function animateHighwayMarkers() {
+    for (let k = 0; k < highwayMarkersL.length; k++) {
+        highwayMarkersL[k].translateZ(25);
+        highwayMarkersR[k].translateZ(25);
+    }
+}
+
+//to check position of markers and reset them
+function checkHighwayMarkers() {
+
+    for (let k = 0; k < highwayMarkersL.length; k++) {
+        if (highwayMarkersL[k].position.z > 1270) {
+            highwayMarkersL[k].translateZ(-4170);
+        }
+
+        if (highwayMarkersR[k].position.z > 1270) {
+            highwayMarkersR[k].translateZ(-4170);
+        }
+
+    }
+}
+
 	function animateStars() {
 
 		// loop through each star
@@ -192,34 +298,62 @@ function addStars(){
 	}
 
 function animatePlanet() {
-    planetOnScene.position.z += 10;
-    planetOnScene.rotation.y += Math.PI/180 * .2;
 
-    if (planetOnScene.scale.z < 1) {
-        planetOnScene.scale.z += .00065;
-        planetOnScene.scale.x += .00065;
-        planetOnScene.scale.y += .00065;
+    for (let k = 0; k < planetsOnScene.length; k++) {
+        planetsOnScene[k].position.z += 10;
+        planetsOnScene[k].rotation.y += Math.PI/180 * .2;
+
+        if (planetsOnScene[k].scale.z < 1) {
+            planetsOnScene[k].scale.z += .00065;
+            planetsOnScene[k].scale.x += .00065;
+            planetsOnScene[k].scale.y += .00065;
+        }
+
+        //as planet gets closer to view, move it over on x-axis so it appears further away.
+        if (planetsOnScene[k].position.z > -6000) {
+
+            //its on right side, so move it to right
+            //
+            if (planetsOnScene[k].position.x > 0) {
+                planetsOnScene[k].position.x += .70;
+            }
+            else { //its on left so move planet to left
+                planetsOnScene[k].position.x -= .70;
+            }
+        }
+
     }
 
-    //as planet gets closer to view, move it over on x-axis so it appears further away.
-    if (planetOnScene.position.z > -6000) {
 
-        //its on right side, so move it to right
-        //
-        if (planetOnScene.position.x > 0) {
-            planetOnScene.position.x += .70;
-        }
-        else { //its on left so move planet to left
-            planetOnScene.position.x -= .70;
-        }
-    }
+
 }
 
+//checks planets z pos, and adds a new planet to scene if conditions met. also deletes
+//planets that move off screen
 function checkPlanetPosition(){
-    if (planetOnScene.position.z > 1400) {
-        scene.remove( planetOnScene );
-        addPlanetToScene();
+    let deleteTopPlanetInPlanetsArray = false;
+
+    for (let k = 0; k < planetsOnScene.length; k++) {
+
+        //deletes planet when its out of view on scene
+        if (planetsOnScene[k].position.z > 1400) {
+            scene.remove( planetsOnScene[k] );
+            deleteTopPlanetInPlanetsArray = true;
+        }
+
+        //this will keep it so that there are always 2 planets in view.. keep it interesting ;)
+        //adds another planet to scene when the planet on scene reaches -8600 z pos.
+        if (planetsOnScene[k].position.z === -5000) {
+            planetsOnScene.push(addPlanetToScene());
+            scene.add(planetsOnScene[planetsOnScene.length - 1]);
+        }
+
     }
+
+    if (deleteTopPlanetInPlanetsArray) {
+        planetsOnScene.splice(0, 1);
+    }
+
 }
 
 function animate() {
@@ -229,6 +363,8 @@ function animate() {
     animateStars();
     animatePlanet();
     checkPlanetPosition();
+    animateHighwayMarkers();
+    checkHighwayMarkers();
 
 }
 
