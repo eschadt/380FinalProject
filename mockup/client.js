@@ -97,7 +97,7 @@ function init() {
   renderer.setSize(width, height);
 
 
-  camera = new THREE.PerspectiveCamera(100, width/height, 0.1, 25000); // FOV, aspect ration, near, far
+  camera = new THREE.PerspectiveCamera(80, width/height, .1, 5000); // FOV, aspect ration, near, far
   camera.position.set(15, 150, 960); // x, y (move up), back out on the z-axis
   scene.add(camera); // add camera to scene
 
@@ -326,7 +326,7 @@ function init() {
 var start = new Date().getTime();
 var current;
 var delta;
-var delay = 45;
+var delay = 25;
 var iteration = 0;
 
 var colors = ["0xffffff", "0xffffff", "0xffffff", "0xffffff", "0x00ffff"];
@@ -359,9 +359,12 @@ function animate() {
 
 
 
-    var resetLightRingZ = (arcArr.length - 3) * -300;
+    //on first run with 9 arcs, the first arc will get to 1060,  the last arc will be -1340, so
+    //we need to spawn the arcs 1t -1640... to modularize this with arc length so i wont have to look
+    //at this if i decide to add more arcs, we need to use equation (arc length - 3.533) * 300
+    var resetLightRingZ = (arcArr.length - 3.5333) * -300;
     for (let k = 0; k < arcArr.length; k++) {
-        arcArr[k].position.z += 20;
+        arcArr[k].position.z += 10;
 
         if (arcArr[k].position.z > 1060) {
 
@@ -381,7 +384,7 @@ function animate() {
     }
 
     for (let k = 0; k < lightArr.length; k++) {
-        lightArr[k].position.z += 20;
+        lightArr[k].position.z += 10;
 
         if (lightArr[k].position.z > 1060) {
                 lightArr[k].position.z =  -1700;
@@ -390,7 +393,7 @@ function animate() {
     }
 
     for (let k = 0; k < roadLightsForRings.length; k++) {
-        roadLightsForRings[k].position.z += 20;
+        roadLightsForRings[k].position.z += 10;
 
         if (roadLightsForRings[k].position.z > 1060) {
                 roadLightsForRings[k].position.z =  resetLightRingZ;
@@ -400,7 +403,7 @@ function animate() {
     var resetBuildingZ = startingZ  -  (((buildingArr.length/2) - 1) * spaceforEachBuilding);
 
     for (let k = 0; k < buildingArr.length; k++) {
-        buildingArr[k].position.z += 20;
+        buildingArr[k].position.z += 10;
 
         if (buildingArr[k].position.z > 1020) {
 
@@ -478,7 +481,7 @@ function createCity(buildingCount, rangeX, rangeY, scale) {
         material.color = new THREE.Color(0xffffff);
         material.map = new THREE.Texture(generateBuildingTexture());
         material.map.anisotropy = renderer.getMaxAnisotropy();
-        material.map.needsUpdate    = true;
+        material.map.needsUpdate = true;
         // create the mesh
         var building = new THREE.Mesh(buildingBlock, material);
         //var scale =((Math.random()/1.2)+0.5) * scale;
@@ -486,7 +489,7 @@ function createCity(buildingCount, rangeX, rangeY, scale) {
         // scale the buildings
         building.scale.x = scale * 2;
         building.scale.z = scale;
-        building.scale.y = scale * 6;
+        building.scale.y =  (Math.random() * 5 + 5) * scale;
         // position the buildings
         building.position.x= startingX;
         building.position.z= startingZ;
