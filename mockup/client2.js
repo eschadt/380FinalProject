@@ -74,9 +74,9 @@ function init() {
 //because all the image loading is done sync, finish setup here
 function finishInit() {
 
-    planetsOnScene.push( addPlanetToScene() );
-    scene.add(planetsOnScene[0]);
 
+    planetsOnScene.push(addPlanetToScene());
+    scene.add(planetsOnScene[0]);
     animate();
 }
 
@@ -198,7 +198,7 @@ function addLighting(intensity) {
 
 //modularize this.. todo
 function createPlanet(planetImg, bumpImg, planetSize) {
-    var planetGeom	= new THREE.SphereGeometry(planetSize, 32, 32);
+    var planetGeom	= new THREE.SphereGeometry(planetSize, 50, 50);
 
     var skinLoader = new THREE.TextureLoader();
     var bumpLoader = new THREE.TextureLoader();
