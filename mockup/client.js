@@ -440,7 +440,7 @@ function generateBuildingTexture() {
     for (var x = 0 ; x < 256 / 4 ; x+=8) {
         for (var y = 0 ; y < 490 / 4 ; y+=8) {
             //ctx.fillStyle=scale(Math.random()).hex();
-            ctx.fillStyle=random_rgba();
+            ctx.fillStyle= random_rgba();
             ctx.fillRect(x+1,y+1,6,6);
         }
     }
@@ -489,7 +489,7 @@ function createCity(buildingCount, rangeX, rangeY, scale) {
         // scale the buildings
         building.scale.x = scale * 2;
         building.scale.z = scale;
-        building.scale.y =  (Math.random() * 5 + 5) * scale;
+        building.scale.y =  scale * 6;//(Math.random() * 5 + 5) * scale;
         // position the buildings
         building.position.x= startingX;
         building.position.z= startingZ;
@@ -514,8 +514,14 @@ function createCity(buildingCount, rangeX, rangeY, scale) {
 }
 
 function random_rgba() {
-    var o = Math.round, r = Math.random, s = 255;
-    return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
+    var random = Math.floor(Math.random() * 4);
+
+    if (random === 0) {
+        return 'rgba(255, 255, 0, 1)';
+    }
+    else {
+        return 'rgba(0, 0, 0, 1)';
+    }
 }
 
 

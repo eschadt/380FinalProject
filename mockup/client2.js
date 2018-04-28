@@ -1,13 +1,13 @@
 var camera, scene, renderer, controls;
 var geometry, material, mesh;
+var container = document.getElementById('scene');
 var stars=[];
 var highwayLines = [];
 
 //will hold all 9 planets in our solar system plus moon and sun!!
 var planets = [];
 
-var planetImgPaths = ["earth", "jupiter", "mars", "mercury", "moon", "neptune"
-                        , "pluto", "saturn", "sun", "uranus", "venus"];
+var planetImgPaths = ["earth", "jupiter", "mars", "mercury", "moon", "neptune", "pluto", "saturn", "sun", "uranus", "venus", "blue", "ice", "trippy"];
 
 //relative (kind of) sizes of the planets, as compared to earth which has base size of 500
 var sizes = [550, 1000, 400, 300, 350, 700, 250, 1000, 1000, 600, 480];
@@ -18,6 +18,8 @@ var highwayMarkersL = [];
 var numberOfMarkersL = 7;
 var highwayMarkersR = [];
 var numberOfMarkersR = 7;
+
+var mirrorSphere, mirrorSphereCamera;
 
 function init() {
   scene = new THREE.Scene();
@@ -67,8 +69,11 @@ function init() {
       createPlanet(planetImgPaths[k], planetImgPaths[k] + "bump", sizes[k]);
   }
 
-  document.body.appendChild(renderer.domElement);
+
+
+
   renderer.render(scene, camera);
+  container.appendChild(renderer.domElement);
 }
 
 //because all the image loading is done sync, finish setup here
@@ -161,12 +166,12 @@ var lastIndex = -1;
 
 //MAKE A DEEP COPY ARGHH, add condition so dont spawn same planet back to back.
 function getRandomPlanet() {
-    let index = Math.floor(Math.random() * 11);
+    let index = Math.floor(Math.random() * planets.length);
 
     //to avoid adding two duplicate planets back to back.
     if (lastIndex != -1) { //dont want to check first planet added
         while (lastIndex === index) {
-            index = Math.floor(Math.random() * 11);
+            index = Math.floor(Math.random() * planets.length);
         }
 
         //update the last index
@@ -217,7 +222,7 @@ function createPlanet(planetImg, bumpImg, planetSize) {
             planets.push(planet);
 
             //all calls down now
-            if (planets.length === 11) {
+            if (planets.length === planetImgPaths.length) {
                 finishInit();
             }
         });

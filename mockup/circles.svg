@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="circles" viewBox="0 0 200 200">
+  <title>Guage</title>
+
+  <defs>
+      <style>
+          @keyframes animateGuage {
+            0% {transform: scaleY(.8);}
+            50% {transform: scaleY(1.0);}
+            100% {transform: scaleY(.8);}
+          }
+
+          rect {
+            fill-opacity: 1;
+            stroke: black;
+            stroke-opacity: 0;
+            animation-name: animateGuage;
+            animation-duration: .4s;
+            animation-iteration-count: infinite;
+            transform: scaleX(.2);
+
+          }
+      </style>
+  </defs>
+
+<rect class="guage1" width="100px" height="200px" style="fill:rgb(256,64,0);" />
+</svg>

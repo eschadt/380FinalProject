@@ -1,0 +1,14 @@
+#dashboard {
+  position: fixed;
+  left: 200px;
+  top: 375px;
+  margin: auto;
+}
+
+
+
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+}
