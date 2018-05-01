@@ -10,7 +10,7 @@ var planets = [];
 var planetImgPaths = ["earth", "jupiter", "mars", "mercury", "moon", "neptune", "pluto", "saturn", "sun", "uranus", "venus", "blue", "ice", "trippy"];
 
 //relative (kind of) sizes of the planets, as compared to earth which has base size of 500
-var sizes = [550, 1000, 400, 300, 350, 700, 250, 1000, 1000, 600, 480];
+var sizes = [550, 1000, 400, 300, 350, 700, 250, 1000, 1000, 600, 480, 550, 600, 650];
 
 var planetsOnScene = [];
 
@@ -178,6 +178,8 @@ function getRandomPlanet() {
         lastIndex = index;
     }
 
+    console.log(planets[index].name);
+
     return planets[index].clone();
 }
 
@@ -219,6 +221,7 @@ function createPlanet(planetImg, bumpImg, planetSize) {
             });
 
             var planet = new THREE.Mesh(planetGeom, material);
+            planet.name = planetImg;
             planets.push(planet);
 
             //all calls down now

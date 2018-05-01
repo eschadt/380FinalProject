@@ -102,19 +102,19 @@ function init() {
   scene.add(camera); // add camera to scene
 
 
-                lightArr.push(addRoadLights(-275, 200, 700, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-270, 200, 700, 0xff0040, 2.5));
                 lightArr.push(addRoadLights(335, 200, 700, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-275, 200, 300, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-270, 200, 300, 0xff0040, 2.5));
                 lightArr.push(addRoadLights(335, 200, 300, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-275, 200, -100, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-270, 200, -100, 0xff0040, 2.5));
                 lightArr.push(addRoadLights(335, 200, -100, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-275, 200, -500, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-270, 200, -500, 0xff0040, 2.5));
                 lightArr.push(addRoadLights(335, 200, -500, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-275, 200, -900, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-270, 200, -900, 0xff0040, 2.5));
                 lightArr.push(addRoadLights(335, 200, -900, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-275, 200, -1300, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-270, 200, -1300, 0xff0040, 2.5));
                 lightArr.push(addRoadLights(335, 200, -1300, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-275, 200, -1700, 0xff0040, 2.5));
+                lightArr.push(addRoadLights(-270, 200, -1700, 0xff0040, 2.5));
                 lightArr.push(addRoadLights(335, 200, -1700, 0xff0040, 2.5));
 
                 //add lights in the middle of the road

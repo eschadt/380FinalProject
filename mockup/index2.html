@@ -6,13 +6,21 @@
 </head>
 
   <body>
-      <audio autoplay controls loop >
+      <audio controls style="position: absolute; left: calc(50% - 150px); bottom: 25px;">
           <source src="spacetrip.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
 
+    <a href="index2.html">
+        <p>
+        <svg class="elements">
+            <use xlink:href="icons.svg#saturn"></use>
+        </svg>
+        </p>
+    </a>
+
     <div id="dashboard">
-          <img src="dashboard.svg" width="1004.55" height="407.14">
+          <img id="dashboard" src="dashboard.svg" width="1004.55" height="407.14">
     </div>
 
     <div id="scene"></div>

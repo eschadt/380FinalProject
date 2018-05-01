@@ -12,3 +12,30 @@ body {
   margin: 0;
   padding: 0;
 }
+
+
+img#dashboard {
+    height: 300px;
+    width: 800px;
+}
+
+p {
+  margin: 0;
+  font-size: 8em;
+  color: #CC0000;
+}
+
+svg.elements {
+  position: fixed;
+  fill: #CC0000;
+  width: 500px;
+  height: 400px;
+  margin: 15px;
+  transform: translateX(150px) translateY(200px);
+  z-index: 10;
+
+}
+
+svg.elements:hover {
+    fill: lime;
+}
