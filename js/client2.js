@@ -1,6 +1,5 @@
 var camera, scene, renderer, controls;
 var geometry, material, mesh;
-var container = document.getElementById('scene');
 var stars=[];
 var highwayLines = [];
 
@@ -22,6 +21,8 @@ var numberOfMarkersR = 7;
 var mirrorSphere, mirrorSphereCamera;
 
 function init() {
+    var container = document.getElementById('scene');
+
   scene = new THREE.Scene();
   var width = window.innerWidth;
   var height = window.innerHeight;
@@ -157,6 +158,7 @@ var lastIndex = -1;
 
 //MAKE A DEEP COPY ARGHH, add condition so dont spawn same planet back to back.
 function getRandomPlanet() {
+
     let index = Math.floor(Math.random() * planets.length);
 
     //to avoid adding two duplicate planets back to back.
@@ -200,8 +202,8 @@ function createPlanet(planetImg, bumpImg, planetSize) {
     var bumpLoader = new THREE.TextureLoader();
 
 
-    skinLoader.load('planets/' + planetImg + ".jpg", function(planetTexture) {
-        bumpLoader.load('planets/' + bumpImg+ ".jpg", function(bumpTexture){
+    skinLoader.load('images/planets/' + planetImg + ".jpg", function(planetTexture) {
+        bumpLoader.load('images/planets/' + bumpImg+ ".jpg", function(bumpTexture){
             let material	= new THREE.MeshStandardMaterial({
                 map	: planetTexture,
                 bumpMap	: bumpTexture,
@@ -366,4 +368,4 @@ function animate() {
 }
 
 
-init();
+document.addEventListener("DOMContentLoaded", init);

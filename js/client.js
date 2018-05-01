@@ -97,7 +97,7 @@ function init() {
 
 
   camera = new THREE.PerspectiveCamera(80, width/height, .1, 5000); // FOV, aspect ration, near, far
-  camera.position.set(15, 150, 960); // x, y (move up), back out on the z-axis
+  camera.position.set(15, 90, 960); // x, y (move up), back out on the z-axis
   scene.add(camera); // add camera to scene
 
 
@@ -287,7 +287,7 @@ function init() {
 
   var textureLoader = new THREE.TextureLoader();
 
-  textureLoader.load('city.jpg', function(texture) {
+  textureLoader.load('images/city.jpg', function(texture) {
    let material = new THREE.MeshStandardMaterial({map: texture});
 
    geometry = new THREE.PlaneGeometry( 5000, 3000, 32 );

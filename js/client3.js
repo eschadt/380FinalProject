@@ -19,7 +19,7 @@ function init() {
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
+    document.body.appendChild(renderer.domElement);
 
     scene = new THREE.Scene();
 
@@ -33,13 +33,14 @@ function init() {
     turnon(); //!!! F*****K the bad GPUs on mac
     // Water
 
+    //code for water and sky adapted from mrdoob examples and class example water.
     var waterGeometry = new THREE.PlaneBufferGeometry(10000, 10000);
 
     water = new THREE.Water(
         waterGeometry, {
             textureWidth: 1024,
             textureHeight: 1024,
-            waterNormals: new THREE.TextureLoader().load('waternormals.jpg', function(texture) {
+            waterNormals: new THREE.TextureLoader().load('images/waternormals.jpg', function(texture) {
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             }),
             alpha: 1,
