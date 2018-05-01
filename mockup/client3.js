@@ -24,14 +24,13 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(43, window.innerWidth / window.innerHeight, .1, 20000);
-    camera.position.set(0, 120, 700);
+    camera.position.set(0, 150, 900);
 
 
     light = new THREE.DirectionalLight(0xffffff, 0.8);
     scene.add(light);
 
-    turnon();
-
+    turnon(); //!!! F*****K the bad GPUs on mac
     // Water
 
     var waterGeometry = new THREE.PlaneBufferGeometry(10000, 10000);
@@ -46,8 +45,8 @@ function init() {
             alpha: 1,
             sunDirection: light.position.clone().normalize(),
             sunColor: 0xff7f50,
-            waterColor: 0x3399ff,
-            distortionScale: 3.8,
+            waterColor: 0x000080,//0x3399ff,
+            distortionScale: 15,
             fog: scene.fog !== undefined
         }
     );
@@ -103,39 +102,49 @@ function init() {
     buildScene();
 
 
-    /*wish i could have these but it slows down the browser too much :/
-    for (let k = 0; k < 9; k++) {
-        var sphere = new THREE.SphereGeometry( 15, 30, 30 );
-        var light2 = new THREE.PointLight( 0x8B008B, 2, 500, 1.2);
-        light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x8B008B } ) ) );
-        light2.position.set(-3300 + k * 375, 800, -3800);
-         scene.add( light2 );
-    }
+    //wish i could have these but it slows down the browser too much :/
+    /*setTimeout(function(){
+        for (let k = 0; k < 9; k++) {
+            var sphere = new THREE.SphereGeometry( 15, 30, 30 );
+            var light2 = new THREE.PointLight( 0x8B008B, 2, 500, 1.2);
+            light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x8B008B } ) ) );
+            light2.position.set(-3300 + k * 375, 800, -3800);
+             scene.add( light2 );
+        }
+    }, 1000);
 
-    for (let k = 0; k < 9; k++) {
+
+    setTimeout(function(){
+        for (let k = 0; k < 9; k++) {
         var sphere = new THREE.SphereGeometry( 15, 30, 30 );
         var light2 = new THREE.PointLight( 0x8B008B, 2, 500, 1.2);
         light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x8B008B } ) ) );
         light2.position.set(-3300 + k * 375, 1000, -4200);
          scene.add( light2 );
-    }
+     }
+ }, 2000);
 
-    for (let k = 0; k < 9; k++) {
+    setTimeout(function() {
+        for (let k = 0; k < 9; k++) {
         var sphere = new THREE.SphereGeometry( 15, 30, 30 );
         var light2 = new THREE.PointLight( 0x8B008B, 2, 500, 1.2);
         light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x8B008B } ) ) );
         light2.position.set(3300 + k * -375, 800, -3800);
          scene.add( light2 );
-    }
+     }
+ }, 3000);
 
-    for (let k = 0; k < 9; k++) {
+
+    setTimeout(function() {
+        for (let k = 0; k < 9; k++) {
         var sphere = new THREE.SphereGeometry( 15, 30, 30 );
         var light2 = new THREE.PointLight( 0x8B008B, 2, 500, 1.2);
         light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x8B008B } ) ) );
         light2.position.set(3300 + k * -375, 1000, -4200);
          scene.add( light2 );
-    }
-    */
+     }
+ }, 4000); */
+
 
 }
 
@@ -146,6 +155,7 @@ function init() {
 function buildScene() {
     addRoad();
     addRoadMarkers();
+    addRoadLiner();
 
     for (let k = 0; k < 11; k++) {
         lightPosts.push(addStreetPostsR());
@@ -191,6 +201,22 @@ function addRoadMarkers() {
         scene.add(roadMarkers[k])
     }
 
+}
+
+function addRoadLiner() {
+    var geometry = new THREE.BoxGeometry( 5, 6000, 1 );
+    var material = new THREE.MeshBasicMaterial( {color: 0x8B008B} );
+    var cube = new THREE.Mesh( geometry, material );
+    cube.position.set(-150, 77, -2000);
+    cube.rotation.x = Math.PI/180 * 90;
+    scene.add( cube );
+
+    geometry = new THREE.BoxGeometry( 5, 6000, 1 );
+    material = new THREE.MeshBasicMaterial( {color: 0x8B008B} );
+    cube = new THREE.Mesh( geometry, material );
+    cube.position.set(150, 77, -2000);
+    cube.rotation.x = Math.PI/180 * 90;
+    scene.add( cube );
 }
 
 //to add custom geo light post with a light next to the road
@@ -353,7 +379,7 @@ function animate() {
         start = new Date().getTime();
 
         requestAnimationFrame( animate );
-        water.material.uniforms.time.value += -1.2 / 60.0;
+        water.material.uniforms.time.value += -4.0 / 60.0;
         renderer.render( scene, camera );
 
         animateRoadMarkers();
@@ -476,7 +502,7 @@ function random_rgba() {
     var random = Math.floor(Math.random() * 10);
 
     if (random === 0) {
-        return 'rgba(255, 255, 0, 1)';
+        return 'rgba(254,91,53, 1)';
     }
     else {
         return 'rgba(0, 0, 0, 1)';
