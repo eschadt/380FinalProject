@@ -1,0 +1,70 @@
+#dashboard {
+  position: fixed;
+  left: 200px;
+  top: 375px;
+  margin: auto;
+}
+
+
+
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+}
+
+
+img#dashboard {
+    height: 300px;
+    width: 800px;
+    transform: translateX(100px) translateY(80px);
+}
+
+p {
+  margin: 0;
+  font-size: 8em;
+  color: #CC0000;
+}
+
+svg.element1 {
+  position: fixed;
+  fill: white;
+  width: 80px;
+  height: 80px;
+  transform: translateX(365px) translateY(488px);
+  z-index: 10;
+
+}
+
+svg.element2 {
+  position: fixed;
+  fill: white;
+  width: 120px;
+  height: 120px;
+  transform: translateX(355px) translateY(560px);
+  z-index: 10;
+
+}
+
+svg.element3 {
+  position: fixed;
+  fill: lime;
+  width: 80px;
+  height: 80px;
+  transform: translateX(365px) translateY(660px);
+  z-index: 10;
+
+}
+
+
+
+svg.element1:hover, svg.element2:hover, svg.element3:hover  {
+    fill: cyan;
+}
+
+audio {
+    position: absolute;
+    left: calc(50% - 150px);
+    bottom: 15px;
+    z-index: 11;
+}

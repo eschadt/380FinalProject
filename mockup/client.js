@@ -19,7 +19,6 @@ var buildingArr = [];
 var backgroundLights = [];
 var roadLightsForRings = [];
 
-var mirrorSphere, mirrorSphereCamera; // for mirror material
 
 
 //add the lights lining the road
@@ -300,19 +299,6 @@ function init() {
  });
 
 
-//add reflective spehre
-//idea taken from inclass example and http://stemkoski.github.io/Three.js/Reflection.html
- var sphereGeom =  new THREE.SphereGeometry( 50, 32, 16 ); // radius, segmentsWidth, segmentsHeight
- mirrorSphereCamera = new THREE.CubeCamera( 0.1, 500, 512 );
- // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
- scene.add( mirrorSphereCamera );
- var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
- mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
- mirrorSphere.position.set(15,50,600);
- mirrorSphereCamera.position = mirrorSphere.position;
- scene.add(mirrorSphere);
-
-
 
  document.body.appendChild(renderer.domElement);
   renderer.render(scene, camera);
@@ -335,21 +321,6 @@ var colors = ["0xffffff", "0xffffff", "0xffffff", "0xffffff", "0x00ffff"];
 function animate() {
 
     var startingZ = 700;
-
-
-	current = new Date().getTime();
-	delta = current - start;
-
-	if (delta >= delay) {
-
-		start = new Date().getTime();
-		iteration++;
-
-        mirrorSphere.visible = false;
-        mirrorSphereCamera.updateCubeMap( renderer, scene );
-        mirrorSphere.visible = true;
-
-	}
 
 
 	renderer.render(scene, camera);

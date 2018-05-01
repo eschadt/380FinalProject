@@ -34,15 +34,6 @@ function init() {
   addLighting(intensity);
 
 
-  var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10); // x, y, vertices
-  var floorMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
-  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  floor.position.y = 0;
-  floor.position.z = 300;
-  floor.position.x = 0;
-  floor.rotation.x = Math.PI / 2; // rotate to lay flat
-  scene.add(floor);
-
   renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true});
   renderer.setSize(width, height);
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -169,14 +160,11 @@ function getRandomPlanet() {
     let index = Math.floor(Math.random() * planets.length);
 
     //to avoid adding two duplicate planets back to back.
-    if (lastIndex != -1) { //dont want to check first planet added
-        while (lastIndex === index) {
-            index = Math.floor(Math.random() * planets.length);
-        }
-
-        //update the last index
-        lastIndex = index;
+    while (lastIndex === index) {
+        index = Math.floor(Math.random() * planets.length);
     }
+    //update the last index
+    lastIndex = index;
 
     console.log(planets[index].name);
 
@@ -203,7 +191,8 @@ function addLighting(intensity) {
     scene.add( light );
 }
 
-//modularize this.. todo
+//function that takes in image input and generates a planet from the image data and bump image passed,
+//and the planet size pass argument passed.
 function createPlanet(planetImg, bumpImg, planetSize) {
     var planetGeom	= new THREE.SphereGeometry(planetSize, 50, 50);
 

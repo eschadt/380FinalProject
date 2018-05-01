@@ -243,9 +243,9 @@ function addStreetPostsR() {
 
     //position light 300 up, 130 over
 
-    var sphere = new THREE.BoxGeometry( 10, 50, 10 );
+    var boxLight = new THREE.BoxGeometry( 10, 51, 15 );
     var light = new THREE.PointLight( 0x8B008B, 5, 500, 1.0);
-    light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x8B008B } ) ) );
+    light.add( new THREE.Mesh( boxLight, new THREE.MeshBasicMaterial( { color: 0x8B008B } ) ) );
     light.position.set(105, 220, 0);
     light.rotation.z = Math.PI / 180 * 90;
     scene.add( light );

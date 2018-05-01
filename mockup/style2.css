@@ -17,6 +17,7 @@ body {
 img#dashboard {
     height: 300px;
     width: 800px;
+    transform: translateX(100px) translateY(80px);
 }
 
 p {
@@ -25,17 +26,45 @@ p {
   color: #CC0000;
 }
 
-svg.elements {
+svg.element1 {
   position: fixed;
-  fill: #CC0000;
-  width: 500px;
-  height: 400px;
-  margin: 15px;
-  transform: translateX(150px) translateY(200px);
+  fill: white;
+  width: 80px;
+  height: 80px;
+  transform: translateX(365px) translateY(498px);
   z-index: 10;
 
 }
 
-svg.elements:hover {
-    fill: lime;
+svg.element2 {
+  position: fixed;
+  fill: lime;
+  width: 120px;
+  height: 120px;
+  transform: translateX(355px) translateY(570px);
+  z-index: 10;
+
+}
+
+svg.element3 {
+  position: fixed;
+  fill: white;
+  width: 80px;
+  height: 80px;
+  transform: translateX(365px) translateY(670px);
+  z-index: 10;
+
+}
+
+
+
+svg.element1:hover, svg.element2:hover, svg.element3:hover  {
+    fill: cyan;
+}
+
+audio {
+    position: absolute;
+    left: calc(50% - 170px);
+    bottom: 15px;
+    z-index: 11;
 }
