@@ -2,14 +2,16 @@ var container, stats;
 var camera, scene, renderer, light;
 var controls, water;
 
+//to hold meshes on screen for manip in animation funcs
 var roadMarkers = [];
 var buildingArr = [];
 var lightPosts = [];
 var lightPostsL = []; //light posts on the right side of the road
 
+//turn on global light :/
 function turnon () {
-    var hmm = new THREE.HemisphereLight( 0xffffbb, 0xffffff, 1 );
-    scene.add( hmm );
+    var light = new THREE.HemisphereLight( 0xffffbb, 0xffffff, 1 );
+    scene.add( light );
 }
 
 function init() {
@@ -30,10 +32,9 @@ function init() {
     light = new THREE.DirectionalLight(0xffffff, 0.8);
     scene.add(light);
 
-    turnon(); //!!! F*****K the bad GPUs on mac
-    // Water
+    turnon();
 
-    //code for water and sky adapted from mrdoob examples and class example water.
+    //code for water and sky adapted from mrdoob examples and class example on water.
     var waterGeometry = new THREE.PlaneBufferGeometry(10000, 10000);
 
     water = new THREE.Water(
@@ -56,8 +57,6 @@ function init() {
 
     scene.add(water);
 
-    // Skybox
-
     var sky = new THREE.Sky();
     sky.scale.setScalar(10000);
     scene.add(sky);
@@ -79,6 +78,7 @@ function init() {
     var cubeCamera = new THREE.CubeCamera(1, 20000, 256);
     cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
 
+    //update sun  based on parameters (pos on screen, inclination, and actual pos of light eminating from sun)
     function updateSun() {
 
         var theta = Math.PI * (parameters.inclination - 0.5);
@@ -178,7 +178,6 @@ function buildScene() {
 }
 
 //adds the road to the scene
-//
 function addRoad() {
     var geometry = new THREE.PlaneGeometry( 300, 8000, 32 );
     var material = new THREE.MeshPhongMaterial( {color: 0x000000, side: THREE.DoubleSide} );
@@ -188,11 +187,9 @@ function addRoad() {
     scene.add( road );
 }
 
-//ads the road markers to the scene
-//
+//adds the road markers to the scene
 function addRoadMarkers() {
     for (let k = 0; k < 50; k++) {
-
         var geometry = new THREE.PlaneGeometry( 10, 50, 32 );
         var material = new THREE.MeshStandardMaterial( {color: 0xfffff0 , side: THREE.DoubleSide} );
         var marker = new THREE.Mesh( geometry, material );
@@ -204,6 +201,7 @@ function addRoadMarkers() {
 
 }
 
+//add neon road liners
 function addRoadLiner() {
     var geometry = new THREE.BoxGeometry( 5, 6000, 1 );
     var material = new THREE.MeshBasicMaterial( {color: 0x8B008B} );
@@ -221,7 +219,6 @@ function addRoadLiner() {
 }
 
 //to add custom geo light post with a light next to the road
-//
 function addStreetPostsR() {
 
     var material = new THREE.MeshBasicMaterial({color: 0x696969});
@@ -278,7 +275,6 @@ function addAnchorR() {
 }
 
 //to add custom geo light post with a light next to the road
-//
 function addStreetPostsL() {
 
     var pole = addStreetPostsR();
@@ -294,9 +290,7 @@ function addStreetPostsL() {
 }
 
 //to position the light posts along the rode
-//
 function positionLightPolesL() {
-
 
     var startingZ = 700;
     for (let k = 0; k < lightPosts.length; k++) {
@@ -499,6 +493,8 @@ function generateBuildingTexture() {
     return canvas;
 }
 
+
+//generates a sun orange color for building windows
 function random_rgba() {
     var random = Math.floor(Math.random() * 10);
 

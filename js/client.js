@@ -1,14 +1,13 @@
 var camera, scene, renderer, controls;
 var geometry, material, mesh;
 
-
-
+//sidemarkers on road
 var block1, block2, block3, block4, block5;
 var block11, block22, block33, block44, block55;
 
 var container = document.getElementById('container');
 
-
+//meshes on scene
 var light1, light2, light3, light4, light5, light6, light7, light8, light9, light10;
 
 var roadMarkers = [];
@@ -18,7 +17,6 @@ var lightArr = [];
 var buildingArr = [];
 var backgroundLights = [];
 var roadLightsForRings = [];
-
 
 
 //add the lights lining the road
@@ -69,94 +67,85 @@ function addLightRings(x, y, z) {
     arcArr.push(torusObject);
 }
 
+//add lights that will go under the rings on the highway
 function addRoadLightsForRings(x, y , z, color, intensity){
 
-      //var intensity = 3.5;
-      var distance = 500;
-      var decay = 1.0;
+    //var intensity = 3.5;
+    var distance = 500;
+    var decay = 1.0;
 
-      var sphere = new THREE.SphereGeometry( .01, 30, 30 );
-      var light = new THREE.PointLight( color, intensity, distance, decay );
-      light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color } ) ) );
-      light.position.set(x, y, z);
+    var sphere = new THREE.SphereGeometry( .01, 30, 30 );
+    var light = new THREE.PointLight( color, intensity, distance, decay );
+    light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: color } ) ) );
+    light.position.set(x, y, z);
 
-      scene.add( light );
-
-      return light;
-
+    scene.add( light );
+    return light;
 }
 
 
 function init() {
-  scene = new THREE.Scene();
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+    scene = new THREE.Scene();
+    var width = window.innerWidth;
+    var height = window.innerHeight;
 
-  renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true});
-  renderer.setSize(width, height);
-
-
-  camera = new THREE.PerspectiveCamera(80, width/height, .1, 5000); // FOV, aspect ration, near, far
-  camera.position.set(15, 90, 960); // x, y (move up), back out on the z-axis
-  scene.add(camera); // add camera to scene
+    renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true});
+    renderer.setSize(width, height);
 
 
-                lightArr.push(addRoadLights(-270, 200, 700, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(335, 200, 700, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-270, 200, 300, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(335, 200, 300, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-270, 200, -100, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(335, 200, -100, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-270, 200, -500, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(335, 200, -500, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-270, 200, -900, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(335, 200, -900, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-270, 200, -1300, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(335, 200, -1300, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(-270, 200, -1700, 0xff0040, 2.5));
-                lightArr.push(addRoadLights(335, 200, -1700, 0xff0040, 2.5));
+    camera = new THREE.PerspectiveCamera(80, width/height, .1, 5000); // FOV, aspect ration, near, far
+    camera.position.set(15, 90, 960); // x, y (move up), back out on the z-axis
+    scene.add(camera); // add camera to scene
 
-                //add lights in the middle of the road
-                for (let k = 0; k < 9; k++) {
-                    roadLightsForRings.push(addRoadLightsForRings(15, 200, 700 - k*300, 0x87CEFA, 3.2));
-                }
+    //add red lights lining the road
+    lightArr.push(addRoadLights(-270, 200, 700, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(335, 200, 700, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(-270, 200, 300, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(335, 200, 300, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(-270, 200, -100, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(335, 200, -100, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(-270, 200, -500, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(335, 200, -500, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(-270, 200, -900, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(335, 200, -900, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(-270, 200, -1300, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(335, 200, -1300, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(-270, 200, -1700, 0xff0040, 2.5));
+    lightArr.push(addRoadLights(335, 200, -1700, 0xff0040, 2.5));
 
-                //add spotlight on the city scape
-                backgroundLight();
+    //add lights in the middle of the road (under the rings)
+    for (let k = 0; k < 9; k++) {
+        roadLightsForRings.push(addRoadLightsForRings(15, 200, 700 - k*300, 0x87CEFA, 3.2));
+    }
 
-                //add stars
-                //add lights that will run on top of city scape, giving the illusion there are spaceships
-                //or stars flying in the landscape.
-                backgroundLights.push({light: addRoadLights(-800, 1000, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(-200, 1100, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(400, 1280, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1200, 1600, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1700, 1350, -1900, 0xffffff, 3.5), speed: 60});
+    //add spotlight on the city scape
+    backgroundLight();
 
-                backgroundLights.push({light: addRoadLights(-1000, 1900, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(0, 1400, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(600, 1500, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1200, 2100, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1800, 1809, -1900, 0xffffff, 3.5), speed: 60});
+    //add stars
+    //add lights that will run on top of city scape, giving the illusion there are spaceships
+    //or stars flying in the landscape. up to user imagination
+    backgroundLights.push({light: addRoadLights(-800, 1000, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(-200, 1100, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(400, 1280, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(1200, 1600, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(1700, 1350, -1900, 0xffffff, 3.5), speed: 60});
 
-                backgroundLights.push({light: addRoadLights(-1200, 2500, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1500, 2200, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(-700, 1800, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(987, 1000, -1900, 0xffffff, 3.5), speed: 60});
-                backgroundLights.push({light: addRoadLights(1950, 850, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(-1000, 1900, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(0, 1400, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(600, 1500, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(1200, 2100, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(1800, 1809, -1900, 0xffffff, 3.5), speed: 60});
 
+    backgroundLights.push({light: addRoadLights(-1200, 2500, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(1500, 2200, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(-700, 1800, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(987, 1000, -1900, 0xffffff, 3.5), speed: 60});
+    backgroundLights.push({light: addRoadLights(1950, 850, -1900, 0xffffff, 3.5), speed: 60});
 
+    //add black fog scene to make it more spooky, more blade runner, more 80s
+    scene.fog = new THREE.Fog(0x000000, -800, 4000)
 
-
-
-
-
-
-                scene.fog = new THREE.Fog(0x000000, -800, 4000)
-                //scene.fog = new THREE.FogExp2(0x00FF7F, .001);
-
-
-
+    //add the blocks lining the road
     geometry = new THREE.BoxGeometry( 400, 25, 50 );
     material = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
     block1 = new THREE.Mesh(geometry, material);
@@ -237,7 +226,7 @@ function init() {
     block55.rotation.y = (Math.PI / 180) * 90;
     sideBarArr.push(block55);
 
-    //add light addLightRings
+    //add the rings covering the highway
     for (let k = 0; k < 9; k++) {
         addLightRings(20, -100, 700 - k * 300);
     }
@@ -247,12 +236,6 @@ function init() {
     var torusObject = new THREE.Mesh( TorusGeometry, material );
     scene.add( torusObject );
     torusObject.position.set(20, -100, -1650);
-    //arcArr.push(torusObject);
-
-
-    //add aditional ring that stays stationary so it makes it looks like rings go down further then they do
-    //
-
 
     //add the road
     geometry = new THREE.PlaneGeometry( 2000, 3000, 32 );
@@ -262,48 +245,43 @@ function init() {
     road.rotation.x = (Math.PI / 180) * 90;
     scene.add( road );
 
+    var floorGeometry = new THREE.PlaneGeometry(2000, 2000, 10, 10); // x, y, vertices
+    var floorMaterial = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
+    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotation.x = Math.PI / 2; // rotate to lay flat
+    scene.add(floor);
 
+    //add road markers
+    for (let k = 0; k < 25; k++) {
+        geometry = new THREE.PlaneGeometry( 15, 50, 32 );
+        material = new THREE.MeshStandardMaterial( {color: 0xfffff0 , side: THREE.DoubleSide} );
+        var marker = new THREE.Mesh( geometry, material );
+        marker.rotation.x = (Math.PI / 180) * 90;
+        marker.position.set(15, 3, -1500 + k * 100)
+        roadMarkers.push(marker);
+        scene.add(roadMarkers[k])
+    }
 
-  var floorGeometry = new THREE.PlaneGeometry(2000, 2000, 10, 10); // x, y, vertices
-  var floorMaterial = new THREE.MeshStandardMaterial({color: 0x000000, wireframe: false});
-  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  floor.rotation.x = Math.PI / 2; // rotate to lay flat
-  scene.add(floor);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  for (let k = 0; k < 25; k++) {
+    //add buildings to the side of the road
+    createCity(16, 800, 100, 3);
 
-      geometry = new THREE.PlaneGeometry( 15, 50, 32 );
-      material = new THREE.MeshStandardMaterial( {color: 0xfffff0 , side: THREE.DoubleSide} );
-      var marker = new THREE.Mesh( geometry, material );
-      marker.rotation.x = (Math.PI / 180) * 90;
-      marker.position.set(15, 3, -1500 + k * 100)
-      roadMarkers.push(marker);
-      scene.add(roadMarkers[k])
-  }
+    //add the cityscape picture to the background of the scene
+    var textureLoader = new THREE.TextureLoader();
+    textureLoader.load('images/city.jpg', function(texture) {
+        let material = new THREE.MeshStandardMaterial({map: texture});
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
+        geometry = new THREE.PlaneGeometry( 5000, 3000, 32 );
+        var background = new THREE.Mesh( geometry, material );
+        //background.rotation.y = (Math.PI / 180) * 180;
+        background.position.set(180, 1350, -2200);
+        scene.add( background );
 
-  createCity(16, 800, 100, 3);
+    });
 
-  var textureLoader = new THREE.TextureLoader();
-
-  textureLoader.load('images/city.jpg', function(texture) {
-   let material = new THREE.MeshStandardMaterial({map: texture});
-
-   geometry = new THREE.PlaneGeometry( 5000, 3000, 32 );
-   var background = new THREE.Mesh( geometry, material );
-   //background.rotation.y = (Math.PI / 180) * 180;
-   background.position.set(180, 1350, -2200);
-   scene.add( background );
-
- });
-
-
-
- document.body.appendChild(renderer.domElement);
-  renderer.render(scene, camera);
-
-
+    document.body.appendChild(renderer.domElement);
+    renderer.render(scene, camera);
 }
 
 
@@ -315,20 +293,13 @@ var delta;
 var delay = 25;
 var iteration = 0;
 
-var colors = ["0xffffff", "0xffffff", "0xffffff", "0xffffff", "0x00ffff"];
-
-
 function animate() {
 
     var startingZ = 700;
 
-
 	renderer.render(scene, camera);
  	controls.update();
 	requestAnimationFrame(animate);
-
-
-
 
     //on first run with 9 arcs, the first arc will get to 1060,  the last arc will be -1340, so
     //we need to spawn the arcs 1t -1640... to modularize this with arc length so i wont have to look
@@ -345,7 +316,7 @@ function animate() {
 
     }
 
-
+    //animate roadmarkers
     for (let k = 0; k < roadMarkers.length; k++) {
         roadMarkers[k].position.z += 10;
 
@@ -354,6 +325,7 @@ function animate() {
         }
     }
 
+    //animate red lights on side of the road
     for (let k = 0; k < lightArr.length; k++) {
         lightArr[k].position.z += 10;
 
@@ -363,6 +335,7 @@ function animate() {
 
     }
 
+    //animate the lights under the rings
     for (let k = 0; k < roadLightsForRings.length; k++) {
         roadLightsForRings[k].position.z += 10;
 
@@ -371,8 +344,8 @@ function animate() {
         }
     }
 
+    //animate movement of the buildings
     var resetBuildingZ = startingZ  -  (((buildingArr.length/2) - 1) * spaceforEachBuilding);
-
     for (let k = 0; k < buildingArr.length; k++) {
         buildingArr[k].position.z += 10;
 
@@ -384,8 +357,8 @@ function animate() {
 
     }
 
+    //animate the lights on top of the cityscape background
     resetX = -1500;
-
     for (let k = 0; k < backgroundLights.length; k++) {
         if (backgroundLights[k].light.position.x > 2000) {
             backgroundLights[k].light.position.x = resetX;
@@ -397,6 +370,7 @@ function animate() {
 }
 
 
+//generate lights in the buildings/textures
 function generateBuildingTexture() {
     var canvas = document.createElement("canvas");
     canvas.width = 256 / 4;
@@ -473,17 +447,14 @@ function createCity(buildingCount, rangeX, rangeY, scale) {
 
 
         startingZ -= spaceforEachBuilding;
-
         if (i === (buildingCount/2) - 1){
             startingZ = 700;
             startingX = 550;
         }
-
-
-
     }
 }
 
+//returns black eith prob 3/4 and yellow 1/4
 function random_rgba() {
     var random = Math.floor(Math.random() * 4);
 
@@ -494,8 +465,6 @@ function random_rgba() {
         return 'rgba(0, 0, 0, 1)';
     }
 }
-
-
 
 init();
 animate(); //animate the light rings above the road animate road markers, animate the lights on the road, building movement, city lights
